@@ -6,11 +6,7 @@ const schema = new Schema(
             type: String,
             required: true,
         },
-        playlistId: {
-            type: Schema.Types.ObjectId,
-            required: true,
-        },
-        media: {
+        url: {
             type: String,
             required: true,
         },

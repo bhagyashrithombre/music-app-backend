@@ -33,7 +33,7 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
     try {
-        const playlists = await PlaylistModel.find({ userId: req.user._id });
+        const playlists = await PlaylistModel.find({ userId: req.user._id }).populate("songs");
 
         return res.status(OK).json({
             message: "",
@@ -51,7 +51,7 @@ const getAll = async (req, res) => {
 
 const get = async (req, res) => {
     try {
-        const playlist = await PlaylistModel.findById(req.params.playlistId);
+        const playlist = await PlaylistModel.findById(req.params.playlistId).populate("songs");
 
         return res.status(OK).json({
             message: "",
@@ -106,4 +106,44 @@ const update = async (req, res) => {
     }
 };
 
-module.exports = { create, getAll, get, update };
+const addSong = async (req, res) => {
+    try {
+        const playlist = await PlaylistModel.findById(req.params.playlistId);
+
+        if (!playlist) {
+            return res.status(NOT_FOUND).json({
+                message: "Playlist not found",
+                data: null,
+                success: false,
+            });
+        }
+
+        const isExist = playlist.songs.find((song) => song.toString() === req.body.songId);
+
+        if (isExist) {
+            return res.status(CONFLICT).json({
+                message: "Song already added to playlist",
+                data: null,
+                success: false,
+            });
+        }
+
+        playlist.songs.push(req.body.songId);
+        await playlist.save();
+        await playlist.populate("songs");
+
+        return res.status(OK).json({
+            message: "Song added to playlist",
+            data: playlist,
+            success: true,
+        });
+    } catch (error) {
+        return res.status(INTERNAL_SERVER_ERROR).json({
+            message: error.message,
+            data: null,
+            success: false,
+        });
+    }
+};
+
+module.exports = { create, getAll, get, update, addSong };

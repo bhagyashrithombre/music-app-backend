@@ -2,6 +2,10 @@ const { Schema, model, models } = require("mongoose");
 
 const schema = new Schema(
     {
+        name: {
+            type: String,
+            required: true,
+        },
         email: {
             type: String,
             required: true,
@@ -9,6 +13,7 @@ const schema = new Schema(
         password: {
             type: String,
             required: true,
+            private: true,
         },
         lastLoginAt: {
             type: Date,
