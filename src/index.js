@@ -10,6 +10,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 app.use("/api/auth", userRoute);
 app.use("/api/playlist", playlistRoute);
