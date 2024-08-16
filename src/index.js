@@ -4,6 +4,7 @@ const userRoute = require("./routes/user.route");
 const playlistRoute = require("./routes/playlist.route");
 const songRoute = require("./routes/song.route");
 const dbConnect = require("./db");
+const cors = require("cors");
 
 const app = express();
 
